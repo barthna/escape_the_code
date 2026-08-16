@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Levels</title>
+    <link rel="stylesheet" href="que.css">
+    <link rel="stylesheet" href="font.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italiana&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="basic">
+        <img class="photo" src="images/bg2.png" alt="Background Image" />
+        <div class="rectangle-3"></div>
+        
+        <!-- Level 1 Question -->
+        <div class="q-1">
+            <a href="index.html">
+                <button onclick="window.location.href='compiler0.html'">Level 1 Question</button>
+            </a>
+        </div>
+        
+        <!-- Level 2 Question -->
+        <div class="q-2">
+            <a href="index.html">
+                <button onclick="window.location.href='level2.html'">Level 2 Question</button>
+            </a>
+        </div>
+        
+        <!-- Level 3 Question -->
+        <div class="q-3">
+            <a href="index.html">
+                <button onclick="window.location.href='level3.html'">Level 3 Question</button>
+            </a>
+        </div>
+        
+        <!-- Level 4 Question -->
+        <div class="q-4">
+            <a href="index.html">
+                <button onclick="window.location.href='level4.html'">Level 4 Question</button>
+            </a>
+        </div>
+        
+        <!-- Level 5 Question (optional) -->
+        <div class="q-5">
+            <a href="index.html">
+                <button onclick="window.location.href='level5.html'">Level 5 Question</button>
+            </a>
+        </div>
+       
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="home a">Home</div>
+            <div class="coding a" onclick="applyEffect()">Coding</div>
+            <div class="log-out a">Log Out</div>
+            <div class="ellipse-3"></div>
+            <img class="user-alt" src="images/profile.png" alt="User Profile" />
+            <!-- Add id="logo" here -->
+            <div class="logo" id="logo">
+                <img src="images/logo.png" alt="Logo"> 
+            </div>
+            <div class="escape-text">Escape the Code</div>
+        </div>
+    </div>
+    <div class="blur-effect" id="blurEffect">
+        <p id="mystery-text"></p>
+    </div>
+
+    <script>
+        // Home button navigation
+        document.querySelector(".home").addEventListener("click", function() {
+            window.location.href = "first.html"; 
+        });
+
+        function applyEffect() {
+            const rectangle = document.querySelector('.rectangle-3');
+            rectangle.classList.add('effect');  // Apply the effect
+        }
+
+        function showText() {
+            const escapeText = document.querySelector(".escape-text");
+            escapeText.style.display = "block"; // Show the text
+
+            // Hide the text after 3 seconds
+            setTimeout(function() {
+                escapeText.style.display = "none";
+            }, 3000); 
+        }
+
+        // Fixed: Added id="logo" in the HTML and now it works
+        document.getElementById("logo").addEventListener("click", function () {
+            let blurEffect = document.getElementById("blurEffect");
+            let mysteryText = document.getElementById("mystery-text");
+
+            // Show the blurred background
+            blurEffect.style.display = "flex";
+
+            // Typewriter effect for "Escape the Code..."
+            let text = "Escape the Code...";
+            let i = 0;
+
+            function typeWriter() {
+                if (i < text.length) {
+                    mysteryText.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 150); // Typing speed
+                } else {
+                    // Remove blur effect when clicked again
+                    setTimeout(() => {
+                        blurEffect.style.display = "none";
+                        mysteryText.textContent = ""; // Reset text
+                    }, 2000); // Disappear after 2 seconds
+                }
+            }
+
+            typeWriter();
+        });
+        // Audio ko preload karna taaki turant play ho
+        var clickSound = new Audio("sound.mp3"); 
+        clickSound.preload = "auto"; // Preload for fast response
+
+        document.addEventListener("click", function() {
+            clickSound.currentTime = 0; // Restart sound on every click
+            clickSound.play();
+        });
+    </script>
+</body>
+</html>

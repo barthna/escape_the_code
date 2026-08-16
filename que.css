@@ -1,0 +1,297 @@
+body {
+  background-color: #000000;
+  margin: 0;
+  padding: 0;
+}
+
+.basic {
+  background: rgba(48, 34, 45, 0.2);
+  height: 1024px;
+  position: relative;
+  top: -10px;
+  right: -10px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.photo {
+  border-color: rgba(48, 34, 45, 0.2);
+  border-width: 15px;
+  width: 100%; /* Ensure the image scales */
+  height: auto; /* Preserve aspect ratio */
+  position: absolute;
+  left: 0;
+  top: 89px;
+  object-fit: cover;
+}
+
+/* Initial rectangle-3 styles */
+/* Initial rectangle-3 styles */
+.rectangle-3 {
+  background: rgba(44, 26, 40, 0.5);
+  border-radius: 5px;
+  border: 1px solid #281e24;
+  width: 924px;
+  height: 750px;
+  position: absolute;
+  left: 50%; /* Center the box */
+  top: 207px; /* Initial position */
+  transform: translateX(-50%); /* Center alignment */
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  transition: all 0.5s ease; /* Smooth transition */
+}
+
+/* Effect for rectangle-3 when the coding button is clicked */
+.rectangle-3.effect {
+  background: rgba(44, 26, 40, 0.8); /* Darken background */
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.5); /* Enhance shadow */
+  transform: translateX(-50%) scale(1.05); /* Slightly scale up */
+}
+
+
+.q-1, .q-2, .q-3, .q-4, .q-5 {
+  width: 725px;
+  height: 89px;
+  position: absolute;
+  left: 50%; /* Center the elements */
+  transform: translateX(-50%);
+}
+
+.q-1 {
+  top: 273px;
+  
+}
+
+.q-2 {
+  top: 405px;
+}
+
+.q-3 {
+  top: 537px;
+}
+
+.q-4 {
+  top: 669px;
+}
+
+.q-5 {
+  top: 801px;
+}
+
+
+
+button {
+  border-radius: 30px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  color: #ffffff;
+  text-align: left 10px;
+  font-family: "Inter-Medium";
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  right: 0;
+  background: #442d3f;
+  border: 1px solid #281e24;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 40px;
+}
+
+button:hover {
+  background-color: rgba(223, 208, 208, 0.1); /* Add hover effect */
+  cursor: pointer;
+ 
+}
+
+.status-bar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.home, .coding, .log-out {
+  color: white;
+  cursor: pointer;
+}
+
+.user-alt {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.logo img {
+  width: 100px;
+  height: auto;
+}
+
+.escape-text {
+  color: #fff;
+  font-size: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.status-bar {
+  background: #281e24;
+  border-style: solid;
+  border-color: #30222d;
+  border-width: 5px;
+  padding: 5px 30px 5px 30px;
+  width: 100%;
+  height: 85px;
+  position: fixed; /* Fixed at the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensures it stays above other elements */
+}
+.ellipse-1 {
+  background: #000000;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  left: 30px;
+  top: 7.5px;
+}
+.home {
+  color: #ffffff;
+  text-align: left;
+  font-family: none;
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  left: 147px;
+  top: 31px;
+  
+}
+.coding {
+  color: #ffffff;
+  text-align: left;
+  font-family: none;
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  left: 282px;
+  top: 31px;
+  
+}
+.log-out {
+  color: #ffffff;
+  text-align: left;
+  font-family: none;
+  font-size: 24px;
+  font-weight: 500;
+  position: absolute;
+  left: 1200px;
+  top: 31px;
+  
+}
+.ellipse-3 {
+  background: #d9d9d9;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  left: 1335px;
+  top: 16px;
+}
+
+.user-alt {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 1358px;
+  top: 38px;
+  overflow: visible;
+}
+.logo {
+  width: 100px;
+  height: 88.65px;
+  position: absolute;
+  left: 20px;
+  top: 8px;
+  object-fit: cover;
+}
+
+
+.a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -3px;
+  width: 0;
+  height: 3px;
+  background-color: rgba(110, 219, 207, 0.9);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.a:hover::after {
+  width: 100%;
+}
+.escape-text {
+  color: #fff;
+  font-size: 24px;
+  position: absolute;
+  top: 120px; /* Position it just below the logo */
+  left: 50%;
+  transform: translateX(-50%); /* Center it horizontally */
+  display: none; /* Initially hidden */
+  background-color: rgba(0, 0, 0, 0); /* Transparent background */
+  padding: 10px 20px; /* Optional padding */
+  border-radius: 5px; /* Optional rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for visibility */
+  font-weight: bold;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Creepster&display=swap'); /* Mystery Fonts */
+
+
+        /* Blur effect when logo is clicked */
+        .blur-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(15px); /* Blurred background */
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #89dfde; /* Neon purple */
+            font-size: 80px;
+            font-weight: bold;
+            font-family: 'UnifrakturMaguntia';
+            text-shadow: 0 0 10px #89dfde, 0 0 20px #800017, 0 0 30px #4b0082;
+            letter-spacing: 5px;
+            display: none;
+        }
+
+        /* Typewriter effect */
+        #mystery-text {
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 5px solid #30222d; /* Blinking cursor */
+            animation: blink 0.8s infinite alternate;
+        }
+
+        /* Blinking cursor effect */
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }

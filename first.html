@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="first.css">
+    <link rel="stylesheet" href="font.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italiana&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="final">
+        <img class="photo" src="images/bg.png" />
+        <div class="shadow"></div>
+        <img class="image-5" src="images/design.png" />
+        <div class="basic">
+          <div class="rectangle-2"></div>
+          <img class="vector-1" src="images/Vector.png" />
+          <div class="line-1"></div>
+          <div class="ellipse-4"></div>
+          <div class="basic2">Basic</div>
+          <div class="frame-1">
+            <div class="button-container">
+              <a href="que.html">
+                <button class="select">Select</button>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="hard" id="hard">
+          <div class="rectangle-2"></div>
+          <img class="vector-12" src="images/Vector.png" />
+          <div class="line-12"></div>
+          <div class="ellipse-4"></div>
+          <div class="basic2">Advance</div>
+          <div class="frame-1">
+            
+          </div>
+        </div>
+        <img class="image-14" src="images/round.png" />
+        <div class="inter">
+          <div class="rectangle-2"></div>
+          <img class="vector-13" src="images/Vector.png" />
+          <div class="line-12"></div>
+          <div class="ellipse-4"></div>
+          <div class="basic3">Intermediate</div>
+          <div class="frame-1">
+            
+           
+          </div>
+        </div>
+        <img class="image-12" src="images/round.png" />
+        <div class="lock-container">
+          <!-- Lock Icon -->
+          <!-- Lock Icons -->
+<!-- Lock Icons -->
+<img src="images/lock.png" alt="Lock" class="lock" onclick="showPopup()">
+<img src="images/lock.png" alt="Lock" class="lock2" onclick="showPopup()">
+
+<!-- Popup -->
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <span class="close-btn" onclick="closePopup()">&times;</span>
+    <h2>Locked</h2>
+    <p>This content is locked. Please unlock it to proceed.</p>
+    <button class="ok-btn" onclick="closePopup()">OK</button> <!-- OK Button -->
+  </div>
+</div>
+
+<img class="image-10" src="images/round.png" />
+        <div class="status-bar">
+          
+          <div class="home a">Home</div>
+          <div class="coding a" onclick="scrollToCoding()">Coding</div>
+          <div class="log-out a">Log Out</div>
+          <div class="ellipse-3"></div>
+          
+          <img class="user-alt" src="images/profile.png" />
+          <div class="logo" id="logo">
+            <img src="images/logo.png" alt="Logo"> 
+        </div>
+        <div class="escape-text">Escape the Code</div>
+    </div>
+</div>
+<div class="blur-effect" id="blurEffect">
+    <p id="mystery-text"></p>
+</div>
+      <script>
+        function scrollToCoding() {
+    document.getElementById("hard").scrollIntoView({
+        behavior: "smooth",
+        block: "end"
+    });
+}
+
+
+  document.querySelector(".home").addEventListener("click", function() {
+      window.scrollTo({ top: 0, behavior: "smooth" }); // Smooth scrolling to top
+  });
+
+  function showText() {
+    const escapeText = document.querySelector(".escape-text");
+    escapeText.style.display = "block"; // Show the text
+
+    // Hide the text after 3 seconds
+    setTimeout(function() {
+        escapeText.style.display = "none";
+    }, 3000); 
+}
+// Fixed: Added id="logo" in the HTML and now it works
+document.getElementById("logo").addEventListener("click", function () {
+            let blurEffect = document.getElementById("blurEffect");
+            let mysteryText = document.getElementById("mystery-text");
+
+            // Show the blurred background
+            blurEffect.style.display = "flex";
+
+            // Typewriter effect for "Escape the Code..."
+            let text = "Escape the Code...";
+            let i = 0;
+
+            function typeWriter() {
+                if (i < text.length) {
+                    mysteryText.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 150); // Typing speed
+                } else {
+                    // Remove blur effect when clicked again
+                    setTimeout(() => {
+                        blurEffect.style.display = "none";
+                        mysteryText.textContent = ""; // Reset text
+                    }, 2000); // Disappear after 2 seconds
+                }
+            }
+
+            typeWriter();
+        });
+        // Audio ko preload karna taaki turant play ho
+        var clickSound = new Audio("sound.mp3"); 
+        clickSound.preload = "auto"; // Preload for fast response
+
+        document.addEventListener("click", function() {
+            clickSound.currentTime = 0; // Restart sound on every click
+            clickSound.play();
+        });
+
+         // Show popup
+  function showPopup() {
+    document.getElementById('popup').style.display = 'flex';
+  }
+
+  // Close popup
+  function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+  }
+</script>
+</body>
+</html>

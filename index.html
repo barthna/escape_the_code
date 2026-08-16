@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escape The Code</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.23.2/full/pyodide.js"></script>
+    <link rel="stylesheet" href="font.css">
+    <!-- Include CodeMirror CSS and JS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/python/python.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #61dafb;
+            text-align: center;
+        }
+       /* Styling for body and font */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Question Box Animation */
+        @keyframes slideDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .question-box {
+            background: rgba(44, 26, 40, 0.5);
+            padding: 20px;
+            border-radius: 8px;
+            padding-top: 70px;
+            color: #ffffff;
+            max-width: 1200px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: slideDown 1s ease-out forwards;
+        }
+
+        .editor-container {
+            width: 100%;
+            max-width: 1200px; /* Same width as question box */
+            background: rgba(44, 26, 40, 0.5);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            margin-left: auto;
+            margin-right: auto; /* Center horizontally */
+            margin-top: 50px; /* Space between question box and editor */
+            position: relative;
+            
+        }
+        #code {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            background-color: #1e222a; /* Dark background for textarea */
+            color: #ffffff; /* White text color */
+            border: 1px solid #444; /* Border color */
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            position: relative; 
+            
+        }
+
+        #code::placeholder {
+            color: rgb(239, 238, 238); /* White color */
+            font-size: 16px; /* Slightly larger text */
+            opacity: 1;
+             /* Fully visible */
+        }
+
+       
+        /* Container for buttons */
+        .button-container {
+            display: flex;
+            justify-content: flex-end; /* Align buttons to the right */
+            gap: 10px; /* Adds space between buttons */
+        }
+
+        /* Button Styling */
+        button {
+            padding: 10px 20px;
+            background-color: #89dfde;
+            color: #282c34;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            flex-shrink: 0; /* Prevent button from shrinking */
+        }
+
+        button:hover {
+            background-color: #4fa3d1;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            background-color: #3887c4;
+            transform: scale(0.98);
+        }
+
+
+        #output {
+            width: 100%;
+            height: 0; /* Height is 0 initially */
+            background-color: #2f2f2f;
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 14px;
+            box-sizing: border-box;
+            display: block; /* Displayed but hidden with height 0 */
+            opacity: 0; /* Invisible initially */
+            transform: scaleY(0); /* Collapsed vertically */
+            transform-origin: top; /* The animation should unfold from top to bottom */
+            transition: height 0.8s ease, opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        /* When the "show" class is added, the output box will unfold */
+        #output.show {
+            height: 150px; /* Set desired height */
+            opacity: 1; /* Make it visible */
+            transform: translateY(0);/* Fully expanded */
+        }
+        /* Status Box */
+        #status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .success {
+            color: #4CAF50;
+        }
+
+        .fail {
+            color: #FF4136;
+        }
+        .status-bar {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .home, .coding, .log-out {
+            color: white;
+            cursor: pointer;
+        }
+
+        .user-alt {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo img {
+            width: 100px;
+            height: auto;
+        }
+
+        .escape-text {
+            color: #fff;
+            font-size: 24px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .status-bar {
+            background: #281e24;
+            border-style: solid;
+            border-color: #30222d;
+            border-width: 5px;
+            padding: 5px 30px 5px 30px;
+            width: 100%;
+            height: 85px;
+            position: fixed; /* Fixed at the top */
+            top: 0;
+            left: 0;
+            z-index: 1000; /* Ensures it stays above other elements */
+        }
+        .ellipse-1 {
+            background: #000000;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            left: 30px;
+            top: 7.5px;
+        }
+        .home {
+            color: #ffffff;
+            text-align: left;
+            font-family:"Inter", serif;
+            font-size: 24px;
+            font-weight: 500;
+            position: absolute;
+            left: 147px;
+            top: 31px;
+        
+        }
+        .coding {
+            color: #ffffff;
+            text-align: left;
+            font-family:"Inter", serif;
+            font-size: 24px;
+            font-weight: 500;
+            position: absolute;
+            left: 282px;
+            top: 31px;
+        
+        }
+        .log-out {
+            color: #ffffff;
+            text-align: left;
+            font-family:"Inter", serif;
+            font-size: 24px;
+            font-weight: 500;
+            position: absolute;
+            left: 1200px;
+            top: 31px;
+        
+        }
+        .ellipse-3 {
+            background: #d9d9d9;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            left: 1335px;
+            top: 16px;
+        }
+
+        .user-alt {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            left: 1358px;
+            top: 38px;
+            overflow: visible;
+        }
+        .logo {
+            width: 100px;
+            height: 88.65px;
+            position: absolute;
+            left: 20px;
+            top: 8px;
+            object-fit: cover;
+        }
+
+
+        .a::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -3px;
+            width: 0;
+            height: 3px;
+            background-color: rgba(110, 219, 207, 0.9);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .a:hover::after {
+            width: 100%;
+        }
+        .escape-text {
+            color: #fff;
+            font-size: 24px;
+            position: absolute;
+            top: 120px; /* Position it just below the logo */
+            left: 50%;
+            transform: translateX(-50%); /* Center it horizontally */
+            display: none; /* Initially hidden */
+            background-color: rgba(0, 0, 0, 0); /* Transparent background */
+            padding: 10px 20px; /* Optional padding */
+            border-radius: 5px; /* Optional rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional shadow for visibility */
+            font-weight: bold;
+        }
+        .basic {
+            background: rgba(48, 34, 45, 0.2);
+            height: 1024px;
+            position: relative;
+            top: -10px;
+            right: -10px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .photo {
+            border-color: rgba(48, 34, 45, 0.2);
+            border-width: 15px;
+            width: 100%; /* Ensure the image scales */
+            height: auto; /* Preserve aspect ratio */
+            position: absolute;
+            left: 0;
+            top: 89px;
+            object-fit: cover;
+        }
+        .cm-s-dracula .CodeMirror-gutters, .cm-s-dracula.CodeMirror {
+             background-color: #30222d !important;
+             
+    
+        }
+        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Creepster&display=swap'); /* Mystery Fonts */
+
+
+        /* Blur effect when logo is clicked */
+        .blur-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(15px); /* Blurred background */
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #89dfde; /* Neon purple */
+            font-size: 80px;
+            font-weight: bold;
+            font-family: 'UnifrakturMaguntia';
+            text-shadow: 0 0 10px #89dfde, 0 0 20px #800017, 0 0 30px #4b0082;
+            letter-spacing: 5px;
+            display: none;
+        }
+
+        /* Typewriter effect */
+        #mystery-text {
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 5px solid #30222d; /* Blinking cursor */
+            animation: blink 0.8s infinite alternate;
+        }
+
+        /* Blinking cursor effect */
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+</style>
+</head>
+<body>
+    <div class="basic">
+        <img class="photo" src="images/bg2.png" alt="Background Image" />
+        
+        
+        <!-- Question Statement -->
+    <div class="question-box">
+        <h2>Problem: Print Multiples</h2>
+        <p>Write a Python program to print the first 5 multiples of a given number <code>n</code>.</p>
+        <p><strong>Example:</strong></p>
+        <pre><code>Input: n = 3
+Output: 3 6 9 12 15</code></pre>
+    </div>
+
+    <div class="editor-container">
+        <textarea id="code" placeholder="Write your Python code here..."></textarea>
+        <div class="button-container">
+            <button id="run-btn">Run</button>
+            <button id="clear-btn">Clear</button>
+        </div>
+        
+        <div id="output">Output will appear here...</div>
+        <div id="status" class="status"></div>
+    </div>
+</div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="home a">Home</div>
+            <div class="coding a" onclick="applyEffect()">Coding</div>
+            <div class="log-out a">Log Out</div>
+            <div class="ellipse-3"></div>
+            <img class="user-alt" src="images/profile.png" alt="User Profile" />
+            <div class="logo" id="logo">
+                <img src="images/logo.png" alt="Logo"> 
+            </div>
+            <div class="escape-text">Escape the Code</div>
+        </div>
+    </div>
+    <div class="blur-effect" id="blurEffect">
+        <p id="mystery-text"></p>
+    </div>
+    
+<script>
+   let pyodide;
+
+// Initialize CodeMirror editor
+const editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+    lineNumbers: true,
+    mode: 'python',
+    theme: 'dracula',
+    matchBrackets: true,
+    autoCloseBrackets: true,
+    indentUnit: 4,
+    indentWithTabs: true
+});
+
+async function loadPyodideAndRun() {
+    if (!pyodide) {
+        document.getElementById('output').textContent = 'Running Code, please wait...';
+        pyodide = await loadPyodide();
+        document.getElementById('output').textContent = '';
+    }
+
+    pyodide.runPython(`
+        import sys
+        from io import StringIO
+        sys.stdout = StringIO()
+    `);
+
+    const code = editor.getValue();
+    const expectedOutput = "3 6 9 12 15"; // Expected output for n=3
+
+    try {
+        await pyodide.runPythonAsync(code);
+        const output = pyodide.runPython('sys.stdout.getvalue()').trim();
+
+        // Show the output box with unfold animation
+        const outputBox = document.getElementById('output');
+        outputBox.style.display = 'block'; // Ensure it's visible
+        outputBox.textContent = `Output:\n${output}`;
+
+        // Add the unfold animation by adding the class "show"
+        outputBox.classList.add('show');
+
+        // Scroll the output box into view automatically when it unfolds
+        outputBox.scrollIntoView({ behavior: "smooth" });
+
+        // Verify Output
+        if (output === expectedOutput) {
+            document.getElementById('status').innerHTML = "✅ Success! Your solution is correct.";
+            document.getElementById('status').className = "status success";
+        } else {
+            document.getElementById('status').innerHTML = `❌ Failed! Expected: ${expectedOutput}, but got: ${output}`;
+            document.getElementById('status').className = "status fail";
+        }
+    } catch (error) {
+        const outputBox = document.getElementById('output');
+        outputBox.style.display = 'block'; // Show the output box in case of error
+        outputBox.textContent = `Error:\n${error.message}`;
+
+        // Add the unfold animation by adding the class "show"
+        outputBox.classList.add('show');
+
+        // Scroll the output box into view automatically when it unfolds
+        outputBox.scrollIntoView({ behavior: "smooth" });
+
+        document.getElementById('status').innerHTML = "❌ Failed! Check your syntax.";
+        document.getElementById('status').className = "status fail";
+    }
+}
+
+document.getElementById('run-btn').addEventListener('click', loadPyodideAndRun);
+document.querySelector(".home").addEventListener("click", function() {
+    window.location.href = "first.html"; 
+});
+
+function showText() {
+    const escapeText = document.querySelector(".escape-text");
+    escapeText.style.display = "block"; // Show the text
+
+    // Hide the text after 3 seconds
+    setTimeout(function() {
+        escapeText.style.display = "none";
+    }, 3000); 
+}
+// Fixed: Added id="logo" in the HTML and now it works
+document.getElementById("logo").addEventListener("click", function () {
+            let blurEffect = document.getElementById("blurEffect");
+            let mysteryText = document.getElementById("mystery-text");
+
+            // Show the blurred background
+            blurEffect.style.display = "flex";
+
+            // Typewriter effect for "Escape the Code..."
+            let text = "Escape the Code...";
+            let i = 0;
+
+            function typeWriter() {
+                if (i < text.length) {
+                    mysteryText.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 150); // Typing speed
+                } else {
+                    // Remove blur effect when clicked again
+                    setTimeout(() => {
+                        blurEffect.style.display = "none";
+                        mysteryText.textContent = ""; // Reset text
+                    }, 2000); // Disappear after 2 seconds
+                }
+            }
+
+            typeWriter();
+        });
+        document.getElementById('clear-btn').addEventListener('click', function() {
+    editor.setValue(''); // Clears the code in the editor
+    document.getElementById('output').textContent = 'Output will appear here...'; // Resets the output box
+    document.getElementById('status').innerHTML = ''; // Clears the status message
+});
+// Check if there is saved code in localStorage and restore it on page load
+window.addEventListener('load', () => {
+    const savedCode = localStorage.getItem('userCode'); // Get saved code from localStorage
+    if (savedCode) {
+        editor.setValue(savedCode); // Set the editor's value to saved code
+    }
+});
+
+// Save the code to localStorage whenever it changes (for example, when the user clicks 'Run Code')
+document.getElementById('run-btn').addEventListener('click', function() {
+    const code = editor.getValue(); // Get the current code from the editor
+    localStorage.setItem('userCode', code); // Save code to localStorage
+});
+
+// Clear the code and reset localStorage when the 'Clear' button is clicked
+document.getElementById('clear-btn').addEventListener('click', function() {
+    editor.setValue(''); // Clear the editor's value
+    localStorage.removeItem('userCode'); // Remove saved code from localStorage
+    document.getElementById('output').textContent = 'Output will appear here...'; // Reset output
+    document.getElementById('status').innerHTML = ''; // Reset status
+});
+
+// Prevent page reload from erasing the code
+window.addEventListener('beforeunload', () => {
+    const code = editor.getValue(); 
+    localStorage.setItem('userCode', code); 
+});
+
+
+var clickSound = new Audio("sound.mp3"); 
+        clickSound.preload = "auto"; 
+
+        document.addEventListener("click", function() {
+            clickSound.currentTime = 0; 
+            clickSound.play();
+        });
+</script>
+</body>
+</html>
